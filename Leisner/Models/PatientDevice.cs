@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Leisner.Models {
+namespace WebAPI.Models {
     public class PatientDevice {
         public int ID { get; set; }
         public DateTime HandOutDate { get; set; }

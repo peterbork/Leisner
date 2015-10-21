@@ -52,9 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Leisner\Leisner.csproj">
+    <ProjectReference Include="..\Leisner\WebAPI.csproj">
       <Project>{3C663FBA-17D6-450B-B0E1-16D90579CB94}</Project>
-      <Name>Leisner</Name>
+      <Name>WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

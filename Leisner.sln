@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leisner", "Leisner\Leisner.csproj", "{3C663FBA-17D6-450B-B0E1-16D90579CB94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "Leisner\WebAPI.csproj", "{3C663FBA-17D6-450B-B0E1-16D90579CB94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leisner.Tests", "Leisner.Tests\Leisner.Tests.csproj", "{77FAB929-8918-4B55-9095-53FC6E1BAE0B}"
 EndProject
