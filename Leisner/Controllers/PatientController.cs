@@ -11,13 +11,19 @@ namespace WebAPI.Controllers{
         List<Models.PatientDevice> patientDeviceList = new List<Models.PatientDevice>();
         static List<Models.Patient> patientList = new List<Models.Patient>() { new Models.Patient(0, "Nick", 22, "male") , new Models.Patient(1, "Jonas", 22, "male") };
         List<Models.Device> deviceList = new List<Models.Device>();
-        
-        
+
+        [HttpGet]
+        [ActionName("GetPatients")]
+        // Get
+        // api/Patient
+        public List<Models.Patient> GetPatients() {
+            return patientList;
+        }
 
         [HttpPost]
-        // Post
+        [ActionName("RegisterPatient")]
         // Content-Type: application/json
-        // Request body: {"ID":2,"Name":"peter","Age":22,"Sex":"male"
+        // {"ID":2,"Name":"peter","Age":22,"Sex":"male"}
         public void RegisterPatient([FromBody]Models.Patient patient) {
             //int id = patientList.Count;
 
@@ -26,21 +32,22 @@ namespace WebAPI.Controllers{
             patientList.Add(_patient);
         }
 
-        [HttpGet]
-        // Get
-        // api/Patient
-        public List<Models.Patient> GetPatients() {
-            return patientList;
+        [HttpPost]
+        [ActionName("HandOutDevice")]
+        // Content-Type: application/json
+        // Request body: [patient: {"ID":2,"Name":"peter","Age":22,"Sex":"male"}, device: {"ID:"1}] virker ikke
+        //FromBody]Models.Patient patient, [FromBody]Models.Device device --- old input
+        public void HandOutDevice([FromBody]Models.PatientDevice patientDevice) {
+            Models.Patient patient = patientDevice.Patient;
+            Models.Device device = patientDevice.Device;
+
+            Models.PatientDevice _patientDevice = new Models.PatientDevice();
+            _patientDevice.HandOutDate = DateTime.Now;
+            _patientDevice.Patient = patient;
+            _patientDevice.Device = device;
+
+            patientDeviceList.Add(_patientDevice);
         }
-
-        //[HttpPost]
-        //public void HandOutDevice(Models.Patient patient, Models.Device device) {
-        //    Models.PatientDevice patientDevice = new Models.PatientDevice();
-        //    patientDevice.HandOutDate = DateTime.Now;
-        //    patientDevice.Patient = patient;
-
-        //    patientDeviceList.Add(patientDevice);
-        //}
 
         //[HttpPost]
         //public void HandInDevice(Models.PatientDevice patientDevice) { 
@@ -48,6 +55,7 @@ namespace WebAPI.Controllers{
         //}
 
         [HttpGet]
+        [ActionName("SearchMeasurements")]
         public List<Models.Measurement> SearchMeasurements(string searchType, string searchValue) {
             List<Models.Measurement> measurementList = new List<Models.Measurement>();
             measurementList = MeasurementController.GetMeasurements();
