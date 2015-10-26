@@ -6,6 +6,8 @@ using System.Web;
 namespace WebAPI.Models {
     public class Device {
         public int ID { get; set; }
+
+        public Device() { }
         public Device( int id) {
             this.ID = id;
         }

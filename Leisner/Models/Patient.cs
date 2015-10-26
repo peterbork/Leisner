@@ -9,7 +9,8 @@ namespace WebAPI.Models {
         public string Name { get; set; }
         public int Age { get; set; }
         public string Sex { get; set; }
-
+        
+        public Patient() { }
         public Patient(int id, string name, int age, string sex) {
             this.ID = id;
             this.Name = name;

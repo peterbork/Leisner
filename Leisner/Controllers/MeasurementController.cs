@@ -17,13 +17,8 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         public void Registration(double volume, DateTime time, string method) {
-            if (method.ToLower() == "manual") {
-                int id = measurementsList.Count;
-
-                measurementsList.Add(new Models.Measurement(id, volume, time, method));
-            } else if (method.ToLower() == "automatic") {
-                // Automatic
-            }
+            int id = measurementsList.Count;
+            measurementsList.Add(new Models.Measurement(id, volume, time, method));
         }
     }
 }

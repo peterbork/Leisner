@@ -7,8 +7,7 @@ using System.Web.Http;
 
 namespace WebAPI.Controllers{
     public class PatientController : ApiController {
-
-        List<Models.PatientDevice> patientDeviceList = new List<Models.PatientDevice>();
+        static List<Models.PatientDevice> patientDeviceList = new List<Models.PatientDevice>();
         static List<Models.Patient> patientList = new List<Models.Patient>() { new Models.Patient(0, "Nick", 22, "male") , new Models.Patient(1, "Jonas", 22, "male") };
         List<Models.Device> deviceList = new List<Models.Device>();
 
@@ -16,8 +15,16 @@ namespace WebAPI.Controllers{
         [ActionName("GetPatients")]
         // Get
         // api/Patient
-        public List<Models.Patient> GetPatients() {
+        public static List<Models.Patient> GetPatients() {
             return patientList;
+        }
+
+        [HttpGet]
+        [ActionName("GetPatientDevices")]
+        // Get
+        // api/Patient
+        public static List<Models.PatientDevice> GetPatientDevices() {
+            return patientDeviceList;
         }
 
         [HttpPost]
@@ -37,30 +44,57 @@ namespace WebAPI.Controllers{
         // Content-Type: application/json
         // Request body: [patient: {"ID":2,"Name":"peter","Age":22,"Sex":"male"}, device: {"ID:"1}] virker ikke
         //FromBody]Models.Patient patient, [FromBody]Models.Device device --- old input
-        public void HandOutDevice([FromBody]Models.PatientDevice patientDevice) {
-            Models.Patient patient = patientDevice.Patient;
-            Models.Device device = patientDevice.Device;
-
-            Models.PatientDevice _patientDevice = new Models.PatientDevice();
-            _patientDevice.HandOutDate = DateTime.Now;
-            _patientDevice.Patient = patient;
-            _patientDevice.Device = device;
+        public void HandOutDevice(int patientID, int deviceID) {
+            Models.PatientDevice _patientDevice = new Models.PatientDevice(patientID, deviceID);
 
             patientDeviceList.Add(_patientDevice);
         }
 
-        //[HttpPost]
-        //public void HandInDevice(Models.PatientDevice patientDevice) { 
-        //    patientDevice.HandInDate = DateTime.Now;
-        //}
+        [HttpPost]
+        public void HandInDevice(Models.PatientDevice patientDevice) { 
+            patientDevice.HandInDate = DateTime.Now;
+        }
 
         [HttpGet]
         [ActionName("SearchMeasurements")]
-        public List<Models.Measurement> SearchMeasurements(string searchType, string searchValue) {
+        public List<Models.Measurement> SearchMeasurements(string searchType, string searchValue, Models.Patient patient) {
+            List<Models.PatientDevice> tempPatientDeviceList = new List<Models.PatientDevice>();
+            List<Models.Measurement> tempMeasurementList = new List<Models.Measurement>();
             List<Models.Measurement> measurementList = new List<Models.Measurement>();
-            measurementList = MeasurementController.GetMeasurements();
 
-            // Indsæt søgeprut og kriterierprut
+            tempPatientDeviceList = patientDeviceList;
+
+            foreach (Models.PatientDevice pd in tempPatientDeviceList) {
+                if (pd.Patient.Name == patient.Name) {
+                    foreach (Models.Measurement m in pd.Measurements) {
+                        tempMeasurementList.Add(m);
+                    }
+                }
+            }
+
+            if (searchType == "volume") {
+                foreach (Models.Measurement m in tempMeasurementList) {
+                    if (double.Parse(searchValue) == m.Volume) {
+                        measurementList.Add(m);
+                    }
+                }
+            }
+
+            if (searchType == "date") {
+                foreach (Models.Measurement m in tempMeasurementList) {
+                    if (Convert.ToDateTime(searchValue) == m.Time) {
+                        measurementList.Add(m);
+                    }
+                }
+            }
+
+            if (searchType == "method") {
+                foreach (Models.Measurement m in tempMeasurementList) {
+                    if (searchValue.ToLower() == m.Method) {
+                        measurementList.Add(m);
+                    }
+                }
+            }
 
             return measurementList;
         }
