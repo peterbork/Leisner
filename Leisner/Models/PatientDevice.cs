@@ -12,6 +12,8 @@ namespace WebAPI.Models {
         public Device Device { get; set; }
         public List<Measurement> Measurements { get; set; }
 
+
+        public PatientDevice() { }
         public PatientDevice(int patientID, int deviceID) {
             Controllers.PatientController pc = new Controllers.PatientController();
 
@@ -34,7 +36,7 @@ namespace WebAPI.Models {
 
             this.ID = pc.GetPatientDevices().Count + 1;
             this.HandOutDate = DateTime.Now;
-            this.HandInDate = new DateTime(0000, 0, 0);
+            this.HandInDate = new DateTime(0001, 1, 1); // definerer en dato for længe siden, for at simulerer den ikke er fastsat
             this.Patient = tempPatient;
             this.Device = tempDevice;
             this.Measurements = new List<Measurement>();

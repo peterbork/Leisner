@@ -95,7 +95,10 @@
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\Measurement.cs" />
     <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\PatientAndDeviceId.cs" />
     <Compile Include="Models\PatientDevice.cs" />
+    <Compile Include="Models\RegistrationPatient.cs" />
+    <Compile Include="Models\SearchMeasurements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -14,7 +14,7 @@ namespace WebAPI.Controllers{
         [HttpGet]
         [ActionName("GetPatients")]
         // Get
-        // api/Patient
+        // api/Patient/GetPatients
         public List<Models.Patient> GetPatients() {
             return patientList;
         }
@@ -22,7 +22,7 @@ namespace WebAPI.Controllers{
         [HttpGet]
         [ActionName("GetPatientDevices")]
         // Get
-        // api/Patient
+        // api/Patient/GetPatientDevices
         public List<Models.PatientDevice> GetPatientDevices() {
             return patientDeviceList;
         }
@@ -30,10 +30,10 @@ namespace WebAPI.Controllers{
         [HttpPost]
         [ActionName("RegisterPatient")]
         // Content-Type: application/json
+        // api/Patient/RegisterPatient
         // {"ID":2,"Name":"peter","Age":22,"Sex":"male"}
         public void RegisterPatient([FromBody]Models.Patient patient) {
             //int id = patientList.Count;
-
             Models.Patient _patient = new Models.Patient(patient.ID, patient.Name, patient.Age, patient.Sex);
 
             patientList.Add(_patient);
@@ -41,23 +41,40 @@ namespace WebAPI.Controllers{
 
         [HttpPost]
         [ActionName("HandOutDevice")]
+        // /api/Patient/HandOutDevice
         // Content-Type: application/json
-        // Request body: [patient: {"ID":2,"Name":"peter","Age":22,"Sex":"male"}, device: {"ID:"1}] virker ikke
-        //FromBody]Models.Patient patient, [FromBody]Models.Device device --- old input
-        public void HandOutDevice([FromBody]int patientID, int deviceID) {
-            Models.PatientDevice _patientDevice = new Models.PatientDevice(patientID, deviceID);
+        // Request body: [patient: {"PatientID": 1, "DeviceID": 1}]
+        public void HandOutDevice([FromBody]Models.PatientAndDeviceId patientanddeviceid) {
+            Models.PatientDevice _patientDevice = new Models.PatientDevice(patientanddeviceid.PatientID, patientanddeviceid.DeviceID);
 
             patientDeviceList.Add(_patientDevice);
         }
 
         [HttpPost]
-        public void HandInDevice(Models.PatientDevice patientDevice) { 
+        [ActionName("HandInDevice")]
+        // /api/Patient/HandInDevice
+        // Content-Type: application/json
+        // Request body: [patient: {"PatientID": 1, "DeviceID": 1}]
+        public void HandInDevice([FromBody]Models.PatientAndDeviceId patientanddeviceid) {
+
+            int patientID = patientanddeviceid.PatientID;
+            int deviceID = patientanddeviceid.DeviceID;
+            Models.PatientDevice patientDevice = new Models.PatientDevice();
+
+            foreach (Models.PatientDevice pd in patientDeviceList) {
+                if (patientID == pd.Patient.ID && deviceID == pd.Device.ID) {
+                    patientDevice = pd;
+                }
+            }
+
             patientDevice.HandInDate = DateTime.Now;
         }
 
         [HttpGet]
         [ActionName("SearchMeasurements")]
-        public List<Models.Measurement> SearchMeasurements(string searchType, string searchValue, Models.Patient patient) {
+        // /api/Patient/SearchMeasurements?searchType=volume&searchValue=5&patientID=1
+        // Content-Type: application/json
+        public List<Models.Measurement> SearchMeasurements([FromBody]Models.SearchMeasurements searchMeasurement) {
             List<Models.PatientDevice> tempPatientDeviceList = new List<Models.PatientDevice>();
             List<Models.Measurement> tempMeasurementList = new List<Models.Measurement>();
             List<Models.Measurement> measurementList = new List<Models.Measurement>();
@@ -65,32 +82,32 @@ namespace WebAPI.Controllers{
             tempPatientDeviceList = patientDeviceList;
 
             foreach (Models.PatientDevice pd in tempPatientDeviceList) {
-                if (pd.Patient.Name == patient.Name) {
+                if (pd.Patient.Name == searchMeasurement.Patient.Name) {
                     foreach (Models.Measurement m in pd.Measurements) {
                         tempMeasurementList.Add(m);
                     }
                 }
             }
 
-            if (searchType == "volume") {
+            if (searchMeasurement.SearchType == "volume") {
                 foreach (Models.Measurement m in tempMeasurementList) {
-                    if (double.Parse(searchValue) == m.Volume) {
+                    if (double.Parse(searchMeasurement.SearchValue) == m.Volume) {
                         measurementList.Add(m);
                     }
                 }
             }
 
-            if (searchType == "date") {
+            if (searchMeasurement.SearchType == "date") {
                 foreach (Models.Measurement m in tempMeasurementList) {
-                    if (Convert.ToDateTime(searchValue) == m.Time) {
+                    if (Convert.ToDateTime(searchMeasurement.SearchValue) == m.Time) {
                         measurementList.Add(m);
                     }
                 }
             }
 
-            if (searchType == "method") {
+            if (searchMeasurement.SearchType == "method") {
                 foreach (Models.Measurement m in tempMeasurementList) {
-                    if (searchValue.ToLower() == m.Method) {
+                    if (searchMeasurement.SearchValue.ToLower() == m.Method) {
                         measurementList.Add(m);
                     }
                 }
