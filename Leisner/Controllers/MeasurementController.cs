@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace WebAPI.Controllers
 {
     public class MeasurementController : ApiController {
-        static List<Models.Measurement> measurementsList;
+        static List<Models.Measurement> measurementsList = new List<Models.Measurement>();
 
         [HttpGet]
         public static List<Models.Measurement> GetMeasurements() {

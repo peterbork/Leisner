@@ -17,7 +17,7 @@ namespace Leisner
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
-                defaults: new { action = "get", id = RouteParameter.Optional }
+                defaults: new {id = RouteParameter.Optional }
             );
         }
     }

@@ -13,7 +13,9 @@ namespace WebAPI.Models {
         public List<Measurement> Measurements { get; set; }
 
         public PatientDevice(int patientID, int deviceID) {
-            List<Models.Patient> patientList = Controllers.PatientController.GetPatients();
+            Controllers.PatientController pc = new Controllers.PatientController();
+
+            List<Models.Patient> patientList = pc.GetPatients();
             List<Models.Device> deviceList = Controllers.DeviceController.GetDevices();
             Models.Patient tempPatient = new Models.Patient();
             Models.Device tempDevice = new Models.Device();
@@ -30,7 +32,7 @@ namespace WebAPI.Models {
                 }
             }
 
-            this.ID = Controllers.PatientController.GetPatientDevices().Count + 1;
+            this.ID = pc.GetPatientDevices().Count + 1;
             this.HandOutDate = DateTime.Now;
             this.HandInDate = new DateTime(0000, 0, 0);
             this.Patient = tempPatient;

@@ -15,7 +15,7 @@ namespace WebAPI.Controllers{
         [ActionName("GetPatients")]
         // Get
         // api/Patient
-        public static List<Models.Patient> GetPatients() {
+        public List<Models.Patient> GetPatients() {
             return patientList;
         }
 
@@ -23,7 +23,7 @@ namespace WebAPI.Controllers{
         [ActionName("GetPatientDevices")]
         // Get
         // api/Patient
-        public static List<Models.PatientDevice> GetPatientDevices() {
+        public List<Models.PatientDevice> GetPatientDevices() {
             return patientDeviceList;
         }
 
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers{
         // Content-Type: application/json
         // Request body: [patient: {"ID":2,"Name":"peter","Age":22,"Sex":"male"}, device: {"ID:"1}] virker ikke
         //FromBody]Models.Patient patient, [FromBody]Models.Device device --- old input
-        public void HandOutDevice(int patientID, int deviceID) {
+        public void HandOutDevice([FromBody]int patientID, int deviceID) {
             Models.PatientDevice _patientDevice = new Models.PatientDevice(patientID, deviceID);
 
             patientDeviceList.Add(_patientDevice);
